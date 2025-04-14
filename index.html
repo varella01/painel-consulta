@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Painel consulta (versão sem servidor)</title>
+  <style>
+    body { background: #111; color: #0f0; font-family: monospace; padding: 20px; }
+    button { margin: 5px; padding: 10px; }
+    .box { background: #222; padding: 20px; border: 1px solid #0f0; }
+  </style>
+</head>
+<body>
+  <h2>Painel Sujo – Dados Capturados</h2>
+  <div class="box" id="dados">Carregando...</div>
+
+  <button onclick="setStatus('autorizado')">Autorizar</button>
+  <button onclick="setStatus('negado')">Negar</button>
+  <button onclick="setStatus('excluir')">Excluir</button>
+
+  <script>
+    const STORAGE_KEY = 'dadosPainel';
+
+    function carregar() {
+      let dados = localStorage.getItem(STORAGE_KEY);
+      if (!dados) {
+        dados = { status: 'pendente', info: 'Exemplo de dados' };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+      } else {
+        dados = JSON.parse(dados);
+      }
+
+      document.getElementById('dados').innerText = JSON.stringify(dados, null, 2);
+    }
+
+    function setStatus(status) {
+      let dados = localStorage.getItem(STORAGE_KEY);
+      dados = dados ? JSON.parse(dados) : {};
+      dados.status = status;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(dados));
+      alert('Status definido: ' + status);
+      carregar();
+    }
+
+    setInterval(carregar, 2000);
+    carregar();
+  </script>
+</body>
+</html>
